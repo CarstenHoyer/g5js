@@ -6478,12 +6478,6 @@ walker@^1.0.7, walker@~1.0.5:
   dependencies:
     makeerror "1.0.x"
 
-"wasmBezierToBiarc@ssh://git@github.com:CarstenHoyer/wasmCubicBezierToBiarc.git#master":
-  version "1.0.0"
-  resolved "ssh://git@github.com:CarstenHoyer/wasmCubicBezierToBiarc.git#4d3e44fe7c00cbe9af10bf59c1a45d3bbede976a"
-  dependencies:
-    complex.js "^2.0.11"
-
 watchpack@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.6.0.tgz#4bc12c2ebe8aa277a71f1d3f14d685c7b446cd00"

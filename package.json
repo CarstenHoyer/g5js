@@ -26,8 +26,7 @@
     "gl-matrix": "^3.1.0",
     "mathjs": "^6.1.0",
     "p5": "^0.9.0",
-    "standard": "^14.0.0",
-    "wasmBezierToBiarc": "ssh://git@github.com:CarstenHoyer/wasmCubicBezierToBiarc.git#master"
+    "standard": "^14.0.0"
   },
   "browserslist": [
     "last 2 Chrome versions",
