@@ -1,0 +1,206 @@
+return baircs;
+    stack<CubicBezier> curves;
+    
+    // ---------------------------------------------------------------------------
+    // First, calculate the inflexion points and split the bezier at them (if any)
+    
+    CubicBezier toSplit = CubicBezier(path);
+    std::cout << "toSplit: " << toSplit.P1.x << ", " << toSplit.P1.y << ", " << toSplit.C1.x << ", " << toSplit.C1.y << ", " << toSplit.C2.x << ", " << toSplit.C2.y << ", " << toSplit.P2.x << ", " << toSplit.P2.y << std::endl;
+    
+    auto inflex = toSplit.InflexionPoints();
+    bool i1 = IsRealInflexionPoint(get<0>(inflex));
+    bool i2 = IsRealInflexionPoint(get<1>(inflex));
+    
+    std::cout << "inFlex1: " << i1 << std::endl;
+    std::cout << "inFlex2: " << i2 << std::endl;
+    
+    if (i1 && !i2)
+    {
+        //std::cout << "A" << std::endl;
+        auto splited = toSplit.Split(real(get<0>(inflex)));
+        curves.push(get<1>(splited));
+        curves.push(get<0>(splited));
+    }
+    else if (!i1 && i2)
+    {
+        //std::cout << "B" << std::endl;
+        auto splited = toSplit.Split(real(get<1>(inflex)));
+        
+        /*std::cout << "splited[0]: " << get<0>(splited).P1.x << ", " << get<0>(splited).P1.y << ", " << get<0>(splited).C1.x << ", " << get<0>(splited).C1.y << ", " << get<0>(splited).C2.x << ", " << get<0>(splited).C2.y << ", " << get<0>(splited).P2.x << ", " << get<0>(splited).P2.y << std::endl;
+         
+         std::cout << "splited[1]: " << get<1>(splited).P1.x << ", " << get<1>(splited).P1.y << ", " << get<1>(splited).C1.x << ", " << get<1>(splited).C1.y << ", " << get<1>(splited).C2.x << ", " << get<1>(splited).C2.y << ", " << get<1>(splited).P2.x << ", " << get<1>(splited).P2.y << std::endl;*/
+        
+        
+        curves.push(get<1>(splited));
+        curves.push(get<0>(splited));
+    }
+    else if (i1 && i2)
+    {
+        //std::cout << "C" << std::endl;
+        float t1 = real(get<0>(inflex));
+        float t2 = real(get<1>(inflex));
+        
+        // I'm not sure if I need, but it does not hurt to order them
+        if (t1 > t2)
+        {
+            auto tmp = t1;
+            t1 = t2;
+            t2 = tmp;
+        }
+        
+        // Make the first split and save the first new curve. The second one has to be splitted again
+        // at the recalculated t2 (it is on a new curve)
+        
+        auto splited1 = toSplit.Split(t1);
+        
+        t2 = (1 - t1) * t2;
+        
+        toSplit = get<1>(splited1);
+        auto splited2 = toSplit.Split(t2);
+        
+        curves.push(get<1>(splited2));
+        curves.push(get<0>(splited2));
+        curves.push(get<0>(splited1));
+    }
+    else {
+        std::cout << "D" << std::endl;
+        curves.push(toSplit);
+    }
+    
+    // ---------------------------------------------------------------------------
+    // Second, approximate the curves until we run out of them
+    int count = 0;
+    while (curves.size() > 0)
+    {
+        CubicBezier bezier = curves.top();
+        curves.pop();
+        
+        //std::cout << "curves" << curves.size() << std::endl;
+        
+        std::cout << "bezier: " << bezier.P1.x << ", " << bezier.P1.y << ", " << bezier.C1.x << ", " << bezier.C1.y << ", " << bezier.C2.x << ", " << bezier.C2.y << ", " << bezier.P2.x << ", " << bezier.P2.y << std::endl;
+        
+        // ---------------------------------------------------------------------------
+        // Calculate the transition point for the BiArc
+        // V: Intersection point of tangent lines
+        Line T1 = Line(bezier.P1, bezier.C1);
+        Line T2 = Line(bezier.P2, bezier.C2);
+        
+        std::cout << "T1: " << T1.m << ", " << T1.P.x << ", " << T1.P.y << std::endl;
+        
+        std::cout << "T2: " << T2.m << ", " << T2.P.x << ", " << T2.P.y << std::endl;
+        
+        // I think this is a hack for an underlying problem.
+        // If the lines are parallel on the x axis, we cannot get the incenter, because we cannot create
+        // a triangle. So in order to avoid this, we rotate the tangent just a little bit.
+        /*if (isnan(T1.m)) {
+         std::cout << "isnan(T1.m)" << std::endl;
+         ofPoint skewedPoint1 = ofPoint(bezier.C1.x - 0.001, bezier.C1.y);
+         T1 = Line(bezier.P1, skewedPoint1);
+         
+         std::cout << "T1 2: " << T1.m << ", " << T1.P.x << ", " << T1.P.y << std::endl;
+         }
+         if (isnan(T2.m)) {
+         std::cout << "isnan(T2.m)" << std::endl;
+         ofPoint skewedPoint2 = ofPoint(bezier.C2.x - 0.001, bezier.C2.y);
+         T2 = Line(bezier.P2, skewedPoint2);
+         }*/
+        
+        
+        
+        ofPoint V = T1.Intersection(T2);
+        
+        
+        std::cout << "V: " << V.x << ", " << V.y << std::endl;
+        
+        // G: incenter point of the triangle (P1, V, P2)
+        // http://www.mathopenref.com/coordincenter.html
+        float dP2V = bezier.P2.distance(V);
+        float dP1V = bezier.P1.distance(V);
+        float dP1P2 = bezier.P1.distance(bezier.P2);
+        ofPoint G = (dP2V * bezier.P1 + dP1V * bezier.P2 + dP1P2 * V) / (dP2V + dP1V + dP1P2);
+        
+        std::cout << "dP2V: " << dP2V << std::endl;
+        std::cout << "dP1V: " << dP1V << std::endl;
+        std::cout << "dP1P2: " << dP1P2 << std::endl;
+        std::cout << "G: " << G.x << ", " << G.y << std::endl;
+        
+        
+        // ---------------------------------------------------------------------------
+        // Calculate the BiArc
+        
+        BiArc biarc = BiArc(bezier.P1, (bezier.P1 - bezier.C1), bezier.P2, (bezier.P2 - bezier.C2), G);
+        
+        /*std::cout << "bezier: " << bezier.P1.x << ", " << bezier.P1.y << ", " << bezier.C1.x << ", " << bezier.C1.y << ", " << bezier.C2.x << ", " << bezier.C2.y << ", " << bezier.P2.x << ", " << bezier.P2.y << ", " << G.x << ", " << G.y << std::endl;*/
+        
+        std::cout << "biarc 1: " << biarc.A1.C.x << ", " << biarc.A1.C.y << ", " << biarc.A1.r * 2 << ", " << biarc.A1.r * 2 << ", " << biarc.A1.startAngle << ", " <<  biarc.A1.startAngle + biarc.A1.sweepAngle << ", " << biarc.A1.cw << std::endl;
+        
+        std::cout << "biarc 2: " << biarc.A2.C.x << ", " << biarc.A2.C.y << ", " << biarc.A2.r * 2 << ", " << biarc.A2.r * 2 << ", " << biarc.A2.startAngle << ", " <<  biarc.A2.startAngle + biarc.A2.sweepAngle << ", " << biarc.A2.cw << std::endl;
+        
+        return BiArc::toPaths(biarcs);
+        // ---------------------------------------------------------------------------
+        // Calculate the maximum error
+        
+        float maxDistance = 0.0f;
+        float maxDistanceAt = 0.0f;
+        
+        auto nrPointsToCheck = biarc.Length() / samplingStep;
+        auto parameterStep = 1.0f / nrPointsToCheck;
+        
+        //std::cout << "nrPointsToCheck: " << nrPointsToCheck << std::endl;
+        //std::cout << "parameterStep: " << parameterStep << std::endl;
+        
+        
+        
+        for (int i = 0; i <= nrPointsToCheck; i++)
+        {
+            //cout << "check: " << i << "\n";
+            float t = parameterStep * i;
+            std::cout << "t: " << t << std::endl;
+            ofPoint u1 = biarc.PointAt(t);
+            std::cout << "u1: " << u1.x << ", " << u1.y << std::endl;
+            ofPoint u2 = bezier.PointAt(t);
+            std::cout << "u2: " << u2.x << ", " << u2.y << std::endl;
+            float distance = (u1 - u2).length();
+            std::cout << "distance: " << distance << std::endl;
+            
+            
+            
+            if (distance > maxDistance)
+            {
+                std::cout << "DISTANCE: " << distance << std::endl;
+                maxDistance = distance;
+                maxDistanceAt = t;
+            }
+        }
+        
+        // Check if the two curves are close enough
+        if (maxDistance > tolerance)
+        {
+            std::cout << "maxDistance: " << maxDistance << std::endl;
+            std::cout << "maxDistanceAt: " << maxDistanceAt << std::endl;
+            // If not, split the bezier curve the point where the distance is the maximum
+            // and try again with the two halfs
+            auto bs = bezier.Split(maxDistanceAt);
+            
+            std::cout << "bs[0]: " << get<0>(bs).P1.x << ", " << get<0>(bs).P1.y << ", " << get<0>(bs).C1.x << ", " << get<0>(bs).C1.y << ", " << get<0>(bs).C2.x << ", " << get<0>(bs).C2.y << ", " << get<0>(bs).P2.x << ", " << get<0>(bs).P2.y << std::endl;
+            
+            std::cout << "bs[1]: " << get<1>(bs).P1.x << ", " << get<1>(bs).P1.y << ", " << get<1>(bs).C1.x << ", " << get<1>(bs).C1.y << ", " << get<1>(bs).C2.x << ", " << get<1>(bs).C2.y << ", " << get<1>(bs).P2.x << ", " << get<1>(bs).P2.y << std::endl;
+            
+            curves.push(get<1>(bs));
+            curves.push(get<0>(bs));
+        }
+        else
+        {
+            std::cout << "Otherwise we are done with the current bezier " << count << std::endl;
+            // Otherwise we are done with the current bezier
+            biarcs.push_back(biarc);
+        }
+        
+        count++;
+        if (count > 100) {
+            return BiArc::toPaths(biarcs);
+        }
+        
+    }
+    
+    return BiArc::toPaths(biarcs);

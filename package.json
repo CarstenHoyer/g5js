@@ -1,0 +1,35 @@
+{
+  "name": "g5js",
+  "version": "0.0.1",
+  "description": "A mapping of p5 shapes to gcode",
+  "private": true,
+  "scripts": {
+    "test": "npx jest",
+    "watch": "npx webpack --watch",
+    "start:dev": "webpack-dev-server"
+  },
+  "author": "Carsten Høyer <cahodk@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-polyfill": "^6.26.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "jest": "^24.9.0",
+    "typescript": "^3.6.2",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.1",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "dependencies": {
+    "assemblyscript": "github:AssemblyScript/assemblyscript",
+    "gl-matrix": "^3.1.0",
+    "mathjs": "^6.1.0",
+    "p5": "^0.9.0",
+    "standard": "^14.0.0",
+    "wasmBezierToBiarc": "ssh://git@github.com:CarstenHoyer/wasmCubicBezierToBiarc.git#master"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions"
+  ]
+}

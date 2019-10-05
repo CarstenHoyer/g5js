@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+    <script src="bundle.js"></script>
+  </head>
+  <body>
+    <script>
+      const sketch = function (p) {
+      
+        let x = 100;
+        let y = 100;
+      
+        p.setup = function () {
+          p.createCanvas(200, 200);
+          p.noLoop()
+        };
+      
+        p.draw = function () {
+          p.background(255);
+          p.fill(255);
+          p.circle(100, 100, 100);
+          p.bezier(10, 100, 23, 50, 20, 90, 100, 100)
+          console.log(p.printGcode().join('\n'))
+        };
+      };
+      </script>
+      <script>
+        (function() {
+          let x = extend({}, sketch, window.p5)
+        })()
+      </script>
+  </body>
+</html>

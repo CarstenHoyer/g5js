@@ -1,0 +1,10 @@
+this.callSuper('_validateParameters', 'arc', arguments)
+    const { feedrate: f } = this.gcode.config
+
+    const angles = {
+      start: start * Math.PI / 180,
+      stop: stop * Math.PI / 180
+    }
+
+    this.renderArc(angles.start, angles.stop, x, y, w / 2, true, f)
+    return this.callSuper('arc', arguments)
