@@ -33,7 +33,7 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([{
       from: 'optimized.wasm',
-      to: path.resolve(__dirname, 'dist'),
+      to: path.resolve(__dirname, 'dist/wasm'),
       context: path.resolve(__dirname, './node_modules/beziertobiarc/dist')
     }])
   ],
