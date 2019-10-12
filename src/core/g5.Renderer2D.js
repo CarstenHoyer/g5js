@@ -1,4 +1,4 @@
-const { move, down, up, arc } = require('./gcode/commands')
+const { move, down, up, arc, dwell } = require('./gcode/commands')
 const vec2 = require('gl-matrix/vec2')
 
 const transformPoints = function (points, matrix) {
@@ -121,6 +121,21 @@ module.exports = function (g5, p5) {
     this.concat([arc(a.center, a.stop, a.cw, f)])
     this.concat([up()])
     return this
+  }
+
+  g5.prototype.renderPoint = function (x, y) {
+    const { transformMatrix: matrix } = this.state
+
+    const points = transformPoints([
+      vec2.fromValues(x, y)
+    ], matrix)
+
+    return this.concat([
+      move(points[0]),
+      down(),
+      dwell(1),
+      up()
+    ])
   }
 
   g5.prototype.renderTriangle = function (args) {
