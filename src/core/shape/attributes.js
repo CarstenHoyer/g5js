@@ -11,6 +11,6 @@ module.exports = function (g5, p5) {
     ) {
       this.state.rectMode = m
     }
-    return this.callSuper('circle', arguments)
+    return this.callSuper('rectMode', arguments)
   }
 }

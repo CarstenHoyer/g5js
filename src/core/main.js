@@ -1,9 +1,9 @@
 /* global CORNER, CENTER */
 import loader from 'assemblyscript/lib/loader'
-import * as mat4 from 'gl-matrix/esm/mat4'
+import * as mat4 from 'gl-matrix/cjs/mat4'
 import './constants'
 
-window.extend = function (cfg, sketch, p5) {
+global.extend = function (cfg, sketch, p5) {
   class G5 extends p5 {
     constructor (config, ...props) {
       super(...props)
@@ -77,10 +77,9 @@ window.extend = function (cfg, sketch, p5) {
         }
 
         if (process.env.JEST_WORKER_ID) {
-          // const fs = require('fs')
-          // const bytes = fs.readFileSync('node_modules/wasmBezierToBiarc/dist/optimized.wasm')
-          // let mod = loader.instantiateBuffer(bytes, imports)
-          // const g5 = new G5(cfg, sketch)
+          const fs = require('fs')
+          const bytes = fs.readFileSync('node_modules/beziertobiarc/dist/optimized.wasm')
+          self.mod = loader.instantiateBuffer(bytes, imports)
         } else {
           loader.instantiateStreaming(window.fetch('./wasm/optimized.wasm'), imports)
             .then(function (mod) {

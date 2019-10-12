@@ -12,6 +12,10 @@ module.exports = function (g5, p5) {
     }
   }
 
+  g5.prototype._offset = function (p1, p2) {
+    return vec2.fromValues(p2[0] - p1[0], p2[1] - p1[1])
+  }
+
   g5.prototype._computeBezier = function (points) {
     const { compute, __retain, __allocArray, __getArrayView, FLOAT64ARRAY_ID } = this.mod
     const id = __retain(__allocArray(FLOAT64ARRAY_ID, points))
@@ -33,11 +37,9 @@ module.exports = function (g5, p5) {
 
   g5.prototype._arc = function (startAngle, sweepAngle, x, y, r, cw) {
     const { transformMatrix: matrix } = this.state
-    const angle = cw ? startAngle : startAngle + sweepAngle
-    const sweep = cw ? startAngle + sweepAngle : startAngle
     const start = { x: x + r, y }
-    const sp = this._rotatePoint(angle, start, { x, y })
-    const ep = this._rotatePoint(sweep, start, { x, y })
+    const sp = this._rotatePoint(startAngle, start, { x, y })
+    const ep = this._rotatePoint(startAngle + sweepAngle, start, { x, y })
     const c = cw ? { x: x - sp.x, y: y - sp.y } : { x: x - ep.x, y: y - ep.y }
 
     const points = transformPoints([
@@ -112,9 +114,9 @@ module.exports = function (g5, p5) {
     return this
   }
 
-  g5.prototype.renderArc = function (startAngle, sweepAngle, x, y, radius, cw, feedrate) {
+  g5.prototype.renderArc = function (startAngle, sweepAngle, x, y, radius, b, cw, feedrate) {
     const { feedrate: f } = this.gcode.config
-    const a = this._arc(startAngle, sweepAngle, x, y, radius, cw, feedrate)
+    const a = this._arc(startAngle, sweepAngle - startAngle, x, y, radius, cw, feedrate)
     this.concat([move(a.start), down()])
     this.concat([arc(a.center, a.stop, a.cw, f)])
     this.concat([up()])
@@ -245,27 +247,31 @@ module.exports = function (g5, p5) {
       }
 
       const points = transformPoints([
-        vec2.fromValues(x, y + tl),
-        vec2.fromValues(x + tl, y),
-        vec2.fromValues(x + w - tr, y),
-        vec2.fromValues(x + w, y + tr),
-        vec2.fromValues(x + w, y + h - br),
-        vec2.fromValues(x + w - br, y + h),
-        vec2.fromValues(x + bl, y + h),
-        vec2.fromValues(x, y + h - bl)
+        vec2.fromValues(x, y + tl), // top left bottom,
+        vec2.fromValues(x + tl, y + tl), // top left arc center,
+        vec2.fromValues(x + tl, y), // top left top,
+        vec2.fromValues(x + w - tr, y), // top right top,
+        vec2.fromValues(x + w - tr, y + tr), // top right arc center
+        vec2.fromValues(x + w, y + tr), // top right bottom
+        vec2.fromValues(x + w, y + h - br), // bottom right top
+        vec2.fromValues(x + w - br, y + h - br), // bottom right arc center
+        vec2.fromValues(x + w - br, y + h), // bottom right left
+        vec2.fromValues(x + bl, y + h), // bottom left bottom
+        vec2.fromValues(x + bl, y + h - bl), // bottom left arc center
+        vec2.fromValues(x, y + h - bl) // boottom left top
       ], matrix)
 
       // Draw shape
       this.concat([
         move(points[0]),
         down(),
-        arc(points[1], tl, null, f),
-        move(points[2], f),
-        arc(points[3], null, tr, f),
-        move(points[4], f),
-        arc(points[5], -br, null, f),
+        arc(this._offset(points[0], points[1]), points[2], 1, f),
+        move(points[3], f),
+        arc(this._offset(points[3], points[4]), points[5], 1, f),
         move(points[6], f),
-        arc(points[7], null, -bl, f),
+        arc(this._offset(points[6], points[7]), points[8], 1, f),
+        move(points[9], f),
+        arc(this._offset(points[9], points[10]), points[11], 1, f),
         move(points[0], f),
         up()
       ])
