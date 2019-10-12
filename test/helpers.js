@@ -1,5 +1,6 @@
 /* global expect */
-global.G5 = require('../src/core/main')(Object)
+window.p5 = require('p5/lib/p5')
+global.G5 = require('../src/core/main')
 
 global.s = input => {
   return input.trim().split('\n').map(i => i.trim())
