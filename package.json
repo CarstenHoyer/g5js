@@ -4,16 +4,25 @@
   "description": "A mapping of p5 shapes to gcode",
   "private": true,
   "scripts": {
-    "test": "npx jest",
+    "test": "NODE_ENV=test npx jest",
     "watch": "npx webpack --watch",
     "start:dev": "webpack-dev-server"
   },
   "author": "Carsten Høyer <cahodk@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "babel-polyfill": "^6.26.0",
+    "@babel/core": "^7.6.2",
+    "@babel/plugin-transform-modules-commonjs": "^7.6.0",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "babel-jest": "^23.4.2",
+    "babel-loader": "^8.0.0-beta",
     "copy-webpack-plugin": "^5.0.4",
+    "esm": "^3.2.25",
     "jest": "^24.9.0",
+    "jest-environment-jsdom-fourteen": "^0.1.0",
     "typescript": "^3.6.2",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9",
@@ -23,13 +32,15 @@
   "dependencies": {
     "assemblyscript": "github:AssemblyScript/assemblyscript",
     "beziertobiarc": "https://github.com/CarstenHoyer/bezierToBiarc",
+    "canvas": "^2.6.0",
+    "canvas-prebuilt": "^2.0.0-alpha.14",
     "gl-matrix": "^3.1.0",
+    "jsdom": "^15.1.1",
     "mathjs": "^6.1.0",
     "p5": "^0.9.0",
     "standard": "^14.0.0"
   },
-  "browserslist": [
-    "last 2 Chrome versions",
-    "last 2 Firefox versions"
-  ]
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0"
+  }
 }
