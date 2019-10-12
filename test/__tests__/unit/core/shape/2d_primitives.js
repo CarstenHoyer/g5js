@@ -217,7 +217,7 @@ test('can create a bezier', async () => {
   `))
 })
 
-test.only('can create a bezier with ccw rotation', async () => {
+test('can create a bezier with ccw rotation', async () => {
   const g5 = extend({}, function () {}, window.p5)
   g5.bezier(10, 100, 23, 50, 20, 90, 100, 100)
   validate(g5, s(`
