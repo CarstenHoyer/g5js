@@ -1,25 +1,22 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: './src/core/main.js',
   devtool: 'source-map',
-  // resolve: {
-  //   extensions: [ '.js' ] 
-  // },
   optimization: {
-		// We no not want to minimize our code.
-		minimize: false
-	},
+    // We no not want to minimize our code.
+    minimize: false
+  },
   module: {
     defaultRules: [
       {
-        type: "javascript/auto",
+        type: 'javascript/auto',
         resolve: {}
       },
       {
         test: /\.json$/i,
-        type: "json"
+        type: 'json'
       }
     ],
     rules: [
@@ -36,8 +33,8 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([{
       from: 'optimized.wasm',
-      to: path.resolve(__dirname, 'dist/wasm'),
-      context: path.resolve(__dirname, './node_modules/wasmBezierToBiarc/dist')
+      to: path.resolve(__dirname, 'dist'),
+      context: path.resolve(__dirname, './node_modules/beziertobiarc/dist')
     }])
   ],
   devServer: {
@@ -46,6 +43,6 @@ module.exports = {
     port: 9000
   },
   node: {
-    fs: "empty"
+    fs: 'empty'
   }
-};
+}

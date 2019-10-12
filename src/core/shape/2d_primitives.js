@@ -22,7 +22,7 @@ module.exports = function (g5) {
     this.callSuper('_validateParameters', 'arc', arguments)
     const { feedrate: f } = this.gcode.config
 
-    this.renderArc(start, stop, x, y, w / 2, true, f)
+    this.renderArc(start, stop, x, y, w / 2, h / 2, true, f)
     return this.callSuper('arc', arguments)
   }
 
@@ -38,14 +38,14 @@ module.exports = function (g5) {
     if (w < 0) {
       w = Math.abs(w)
     }
-
+    
     if (typeof h === 'undefined') {
       // Duplicate 3rd argument if only 3 given.
       h = w
     } else if (h < 0) {
       h = Math.abs(h)
     }
-
+    
     const vals = canvas.modeAdjust(x, y, w, h, this.state.ellipseMode)
     this.renderEllipse([vals.x, vals.y, vals.w, vals.h])
     return this.callSuper('ellipse', arguments)

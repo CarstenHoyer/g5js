@@ -1,7 +1,7 @@
-/* global G5, QUARTER_PI, test, validate, s, CENTER */
+/* global G5, extend, QUARTER_PI, test, validate, s, CENTER */
 
 test('can rotate rect 90 degrees', async () => {
-  const g5 = await G5({}, null)
+  const g5 = extend({}, function () {}, window.p5)
   g5.rotate(QUARTER_PI)
   g5.rect(100, 0, 100, 50)
 
@@ -17,7 +17,7 @@ test('can rotate rect 90 degrees', async () => {
 })
 
 test('can translate rect', async () => {
-  const g5 = await G5({}, null)
+  const g5 = extend({}, function () {}, window.p5)
   g5.translate(100, 100)
   g5.rect(0, 0, 100, 50)
 
@@ -33,7 +33,7 @@ test('can translate rect', async () => {
 })
 
 test('can translate rect in rectMode CENTER', async () => {
-  const g5 = await G5({}, null)
+  const g5 = extend({}, function () {}, window.p5)
   g5.rectMode(CENTER)
   g5.translate(10, 20)
   g5.rect(25, 30, 50, 60)
@@ -50,7 +50,7 @@ test('can translate rect in rectMode CENTER', async () => {
 })
 
 test('can translate and rotate rect in rectMode CENTER', async () => {
-  const g5 = await G5({}, null)
+  const g5 = extend({}, function () {}, window.p5)
   g5.translate(100, 100)
   g5.rotate(QUARTER_PI)
   g5.rectMode(CENTER)
@@ -68,7 +68,7 @@ test('can translate and rotate rect in rectMode CENTER', async () => {
 })
 
 test('can translate and rotate rect', async () => {
-  const g5 = await G5({}, null)
+  const g5 = extend({}, function () {}, window.p5)
   g5.translate(100, 100)
   g5.rotate(QUARTER_PI)
   g5.rect(0, 0, 100, 50)
@@ -85,7 +85,7 @@ test('can translate and rotate rect', async () => {
 })
 
 test('can rotate and translate rect', async () => {
-  const g5 = await G5({}, null)
+  const g5 = extend({}, function () {}, window.p5)
   g5.rotate(QUARTER_PI)
   g5.translate(100, 100)
   g5.rect(100, 0, 100, 50)
