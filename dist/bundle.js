@@ -4837,8 +4837,8 @@ module.exports = function (g5, p5) {
   g5.prototype._arc = function (startAngle, sweepAngle, x, y, r, cw) {
     const { transformMatrix: matrix } = this.state
     const start = { x: x + r, y }
-    const sp = this._rotatePoint(startAngle, start, { x, y })
-    const ep = this._rotatePoint(startAngle + sweepAngle, start, { x, y })
+    const sp = this._rotatePoint(cw ? startAngle : startAngle + sweepAngle, start, { x, y })
+    const ep = this._rotatePoint(cw ? startAngle + sweepAngle : startAngle, start, { x, y })
     const c = cw ? { x: x - sp.x, y: y - sp.y } : { x: x - ep.x, y: y - ep.y }
 
     const points = transformPoints([
