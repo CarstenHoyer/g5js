@@ -2,6 +2,11 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
+  haste: {
+    providesModuleNodeModules: [
+      'gl-matrix'
+    ]
+  },
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -58,7 +63,9 @@ module.exports = {
   // globalTeardown: null,
 
   // A set of global variables that need to be available in all test environments
-  // globals: {},
+  globals: {
+    window: {}
+  },
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
@@ -132,7 +139,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "node",
+  testEnvironment: "jest-environment-jsdom-fourteen",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -147,9 +154,12 @@ module.exports = {
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  // testPathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  testPathIgnorePatterns: [
+    '<rootDir>/test/__tests__/unit/gcode',
+    '<rootDir>/test/__tests__/unit/core/bezier',
+    '<rootDir>/test/__tests__/unit/core/structure',
+    '<rootDir>/test/__tests__/unit/core/transform'
+  ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],
@@ -167,18 +177,21 @@ module.exports = {
   // timers: "real",
 
   // A map from regular expressions to paths to transformers
-  // transform: null,
+  transform: {
+    '^.+\\.[t|j]sx?$': 'babel-jest',
+    '^.+/esm/.*?\\.js$': 'esm'
+  },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  transformIgnorePatterns: [
+    // '<rootDir>/'
+  ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
 
   // Indicates whether each individual test should be reported during the run
-  // verbose: null,
+  verbose: true,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
   // watchPathIgnorePatterns: [],
