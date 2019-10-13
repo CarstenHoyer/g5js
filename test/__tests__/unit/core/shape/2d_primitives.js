@@ -205,6 +205,24 @@ test('can create circle', async () => {
   `))
 })
 
+test('can create circle where I or J are close to zero position', async () => {
+  const g5 = extend({}, function () {}, window.p5)
+  g5.circle(32, 100, 100)
+  validate(g5, s(`
+    G0 X82 Y100
+    G0 Z0
+    G3 X67.35533905029297 Y135.3553466796875 I-50 F1500
+    G3 X32 Y150 I-35.35533905029297 J-35.35533905029297 F1500
+    G3 X-3.3553390502929688 Y135.3553466796875 J-50 F1500
+    G3 X-18 Y100 I35.35533905029297 J-35.35533905029297 F1500
+    G3 X-3.3553390502929688 Y64.64466094970703 I50 F1500
+    G3 X32 Y50 I35.35533905029297 J35.35533905029297 F1500
+    G3 X67.35533905029297 Y64.64466094970703 J50 F1500
+    G3 X82 Y100 I-35.35533905029297 J35.35533905029297 F1500
+    G0 Z1
+  `))
+})
+
 test('can create a bezier', async () => {
   const g5 = extend({}, function () {}, window.p5)
   g5.bezier(50, 100, 50, 72.38576251, 72.38576251, 50, 100, 50)
