@@ -4800,9 +4800,17 @@ if (!Math.hypot) Math.hypot = function () {
 const { move, down, up, arc, dwell } = __webpack_require__(11)
 const vec2 = __webpack_require__(12)
 
+const isEpsilon = (val) => Math.abs(val) <= 1e-6
+
 const transformPoints = function (points, matrix) {
-  return points.map(point => vec2.transformMat4(point, point, matrix))
+  return points
+    .map(point => vec2.transformMat4(point, point, matrix))
+    .map(point => ([
+      isEpsilon(point[0]) ? 0 : point[0],
+      isEpsilon(point[1]) ? 0 : point[1]
+    ]))
 }
+
 module.exports = function (g5, p5) {
   g5.prototype._rotatePoint = function (angle, start, center) {
     return {
