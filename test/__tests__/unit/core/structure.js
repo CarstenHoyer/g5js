@@ -1,7 +1,7 @@
 /* global extend, test, expect, QUARTER_PI, CENTER, CORNER */
 window.p5 = require('p5/lib/p5')
 require('p5/lib/addons/p5.dom')
-const mat4 = require('gl-matrix/mat4')
+const mat3 = require('gl-matrix/mat3')
 
 test('can push state', async () => {
   const g5 = extend({}, function () {}, window.p5)
@@ -14,7 +14,7 @@ test('can push state', async () => {
     rectMode: newRectMode
   } = g5.state
 
-  expect(transformMatrix).toStrictEqual(mat4.create())
+  expect(transformMatrix).toStrictEqual(mat3.create())
   expect(newTransformMatrix).not.toStrictEqual(transformMatrix)
   expect(rectMode).toBe(CORNER)
   expect(newRectMode).toBe(CENTER)
@@ -33,7 +33,7 @@ test('can pop state', async () => {
     rectMode: newRectMode
   } = g5.state
 
-  expect(transformMatrix).toStrictEqual(mat4.create())
+  expect(transformMatrix).toStrictEqual(mat3.create())
   expect(newTransformMatrix).toStrictEqual(transformMatrix)
   expect(newRectMode).toBe(CORNER)
 })

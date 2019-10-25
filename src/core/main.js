@@ -1,28 +1,40 @@
 /* global CORNER, CENTER */
 import loader from 'assemblyscript/lib/loader'
-import * as mat4 from 'gl-matrix/cjs/mat4'
+import * as mat3 from 'gl-matrix/cjs/mat3'
 import './constants'
+
+const defaultState = {
+  doStroke: true,
+  doFill: true,
+  rectMode: CORNER,
+  ellipseMode: CENTER,
+  transformMatrix: mat3.create()
+}
 
 global.extend = function (cfg, sketch, p5) {
   class G5 extends p5 {
     constructor (config, ...props) {
       super(...props)
-      this.states = []
-
-      this.state = {
-        doStroke: true,
-        doFill: true,
-        rectMode: CORNER,
-        ellipseMode: CENTER,
-        transformMatrix: mat4.create()
-      }
 
       const cfg = config || {}
       this.gcode = {
+        states: [],
+        state: {
+          ...defaultState
+        },
         commands: [],
         config: {
-          feedrate: cfg.feedrate || 1500,
+          feedrate: cfg.feedrate || 300,
           dwell: cfg.dwell || 1
+        },
+        copy: () => {
+          const el = document.createElement('textarea')
+          el.style.cssText = 'position: absolute; top: 0; right: 0'
+          el.value = this.gcode.commands.join('\n')
+          document.body.appendChild(el)
+        },
+        resetMatrix: () => {
+          this.gcode.state.transformMatrix = mat3.create()
         }
       }
 
