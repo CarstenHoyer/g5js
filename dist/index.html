@@ -1,9 +1,11 @@
 <html>
 
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+    <!-- <script src="../node_modules/p5/lib/p5.js" type="text/javascript"></script>
+    <script src="../node_modules/p5/lib/addons/p5.dom.js" type="text/javascript"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script> -->
   <script src="bundle.js"></script>
 </head>
 
@@ -27,12 +29,12 @@
           if (x % 100 === 0) {
             p.push()
             p.stroke(120)
-            p.line(x + 1, 0, x + 1, p.height)
+            p.line(x, 0, x, p.height)
             p.pop()
           } else if (x % 50 === 0) {
             p.push()
             p.stroke(180)
-            p.line(x + 1, 0, x + 1, p.height)
+            p.line(x, 0, x, p.height)
             p.pop()
           } else {
             //p.line(x, 0, x, p.height)
@@ -42,12 +44,12 @@
             if (y % 100 === 0) {
               p.push()
               p.stroke(120)
-              p.line(0, y + 1, p.width, y + 1)
+              p.line(0, y, p.width, y)
               p.pop()
             } else if (y % 50 === 0) {
               p.push()
               p.stroke(180)
-              p.line(0, y + 1, p.width, y + 1)
+              p.line(0, y, p.width, y)
               p.pop()
             } else {
               //p.line(0, y, p.width, y)
@@ -65,7 +67,7 @@
         p.arc(200 + x, 50 + y, 50, 50, 0, p.HALF_PI, p.PIE)
 
         p.push()
-        p.ellipseMode(CORNERS)
+        p.ellipseMode(p.CORNERS)
         p.arc(500 + x, 0 + y, 600 + x, 100 + y, 0, p.HALF_PI)
         p.arc(550 + x, 0 + y, 650 + x, 100 + y, 0, p.HALF_PI, p.OPEN)
         p.arc(600 + x, 0 + y, 700 + x, 100 + y, 0, p.HALF_PI, p.CHORD)
@@ -80,7 +82,7 @@
 
         // ------------------------------------
         p.push()
-        p.ellipseMode(CENTER)
+        p.ellipseMode(p.CENTER)
         p.arc(50 + x, 100 + y, 80, 50, 0, p.HALF_PI)
         p.arc(100 + x, 100 + y, 80, 50, 0, p.HALF_PI, p.OPEN)
         p.arc(150 + x, 100 + y, 80, 50, 0, p.HALF_PI, p.CHORD)
@@ -89,7 +91,7 @@
 
 
         p.push()
-        p.ellipseMode(CORNER)
+        p.ellipseMode(p.CORNER)
         p.arc(260 + x, 75 + y, 80, 50, 0, p.HALF_PI)
         p.arc(310 + x, 75 + y, 80, 50, 0, p.HALF_PI, p.OPEN)
         p.arc(360 + x, 75 + y, 80, 50, 0, p.HALF_PI, p.CHORD)
@@ -98,7 +100,7 @@
 
         // ------------------------------------
         p.push()
-        p.ellipseMode(RADIUS)
+        p.ellipseMode(p.RADIUS)
         p.arc(50 + x, 150 + y, 80, 50, 0, p.HALF_PI)
         p.arc(150 + x, 150 + y, 80, 50, 0, p.HALF_PI, p.OPEN)
         p.arc(250 + x, 150 + y, 80, 50, 0, p.HALF_PI, p.CHORD)
@@ -109,17 +111,17 @@
       function drawEllipses(x = 0, y = 0) {
         p.ellipse(150 + x, 500 + y, 50, 50)
         p.push()
-        p.ellipseMode(RADIUS)
+        p.ellipseMode(p.RADIUS)
         p.ellipse(150 + x, 500 + y, 50, 50)
         p.pop()
 
         p.push()
-        p.ellipseMode(CORNER)
+        p.ellipseMode(p.CORNER)
         p.ellipse(275 + x, 475 + y, 50, 50)
         p.pop()
 
         p.push()
-        p.ellipseMode(CORNERS)
+        p.ellipseMode(p.CORNERS)
         p.ellipse(375 + x, 475 + y, 425 + x, 525 + y)
         p.pop()
       }
@@ -127,17 +129,17 @@
       function drawCircles(x = 0, y = 0) {
         p.circle(550 + x, 500 + y, 50, 50)
         p.push()
-        p.ellipseMode(RADIUS)
+        p.ellipseMode(p.RADIUS)
         p.ellipse(550 + x, 500 + y, 50, 50)
         p.pop()
 
         p.push()
-        p.ellipseMode(CORNER)
+        p.ellipseMode(p.CORNER)
         p.ellipse(675 + x, 475 + y, 50, 50)
         p.pop()
 
         p.push()
-        p.ellipseMode(CORNERS)
+        p.ellipseMode(p.CORNERS)
         p.ellipse(775 + x, 475 + y, 825 + x, 525 + y)
         p.pop()
       }
@@ -169,17 +171,17 @@
         p.rect(800, 850, 50, 50, 20, 15, 0, 15)
 
         p.push()
-        p.rectMode(CORNERS)
+        p.rectMode(p.CORNERS)
         p.rect(400, 950, 450, 1000)
         p.pop()
 
         p.push()
-        p.rectMode(RADIUS)
+        p.rectMode(p.RADIUS)
         p.rect(575, 975, 25, 25)
         p.pop()
 
         p.push()
-        p.rectMode(CENTER)
+        p.rectMode(p.CENTER)
         p.rect(725, 975, 50, 50)
         p.pop()
       }
@@ -191,17 +193,17 @@
         p.square(550, 1050, 50, 20, 15, 0, 5)
 
         p.push()
-        p.rectMode(CORNERS)
+        p.rectMode(p.CORNERS)
         p.rect(100, 1200, 150, 1150)
         p.pop()
 
         p.push()
-        p.rectMode(RADIUS)
+        p.rectMode(p.RADIUS)
         p.rect(275, 1175, 25, 25)
         p.pop()
 
         p.push()
-        p.rectMode(CENTER)
+        p.rectMode(p.CENTER)
         p.rect(425, 1175, 50, 50)
         p.pop()
       }
@@ -233,7 +235,6 @@
         rotation && drawArcs(0, 0)
         rotation && drawArcs(50, 150)
         p.pop()
-        p.circle(17, 88, 4)
 
         drawEllipses()
         p.push()
@@ -353,7 +354,7 @@
 
       function drawLocalRotations() {
         p.push()
-        p.rectMode(CENTER)
+        p.rectMode(p.CENTER)
         drawCentered()
         drawCentered(true)
         p.pop()
@@ -362,92 +363,92 @@
       function drawTransformationTests (x = 0, y = 0) {
         p.translate(50, 100)
         p.scale(1.2)
-        p.rotate(p.QUARTER_PI / 2)
-        p.shearY(p.QUARTER_PI / 2);
-        p.shearX(p.QUARTER_PI / 2);
-        p.shearX(p.QUARTER_PI / 2);
-        p.shearY(p.QUARTER_PI / 2);
-        p.translate(10, 5)
-        p.rotate(p.QUARTER_PI / 2)
-        drawCollection(x, y)
+
+        // p.rotate(p.QUARTER_PI / 2)
+        // p.shearY(p.QUARTER_PI / 2);
+        // p.shearX(p.QUARTER_PI / 2);
+        // p.shearX(p.QUARTER_PI / 2);
+        // p.shearY(p.QUARTER_PI / 2);
+
+        p.translate(100, 5)
+        // p.rotate(p.QUARTER_PI / 2)
+
+        // p.rotate(p.QUARTER_PI / 8)
+        // p.rotate(p.QUARTER_PI / 8)
+        // p.rotate(p.QUARTER_PI / 8)
         
+        // drawCollection(x, y)
       }
 
       function drawCollection(x, y) {
-        p.arc(50 + x, 100 + y, 50 + x, 50 + y, 0, p.HALF_PI)
+        // p.arc(50 + x, 100 + y, 50 + x, 50 + y, 0, p.HALF_PI)
         p.ellipse(50 + x, 100 + y, 50, 50)
-        p.ellipse(100 + x, 100 + y, 50, 75)
-        p.circle(150 + x, 200 + y, 50)
-        p.line(0 + x, 0 + y, 50 + x, 50 + y)
+        // p.ellipse(100 + x, 100 + y, 50, 75)
+        // p.circle(150 + x, 200 + y, 50)
+        // p.line(0 + x, 0 + y, 50 + x, 50 + y)
         
-        p.push()
-        p.strokeWeight(10)
-        p.point(5, 300)
-        p.pop()
+        // p.push()
+        // p.strokeWeight(10)
+        // p.point(5, 300)
+        // p.pop()
         
-        p.quad(38, 31, 86, 20, 69, 63, 30, 76)
+        // p.quad(38, 31, 86, 20, 69, 63, 30, 76)
 
-        p.rect(0 + x, -100 + y, 50 + x, 50 + y)
-        p.rect(100 + x, -50 + y, 50 + x, 50 + y, 20)
-        p.rect(200 + x, -100 + y, 50 + x, 50 + y, 20, 15, 10, 5)
+        // p.rect(0 + x, -100 + y, 50 + x, 50 + y)
+        // p.rect(100 + x, -50 + y, 50 + x, 50 + y, 20)
+        // p.rect(200 + x, -100 + y, 50 + x, 50 + y, 20, 15, 10, 5)
 
-        p.square(100, 20, 55);
-        p.square(150, 20, 55, 20);
-        p.square(200, 20, 55, 20, 15, 10, 5);
+        // p.square(100, 20, 55);
+        // p.square(150, 0, 50, 10);
+        // p.square(200, 20, 55, 20, 15, 10, 5);
 
-        p.triangle(30, 75, 58, 20, 86, 75);
+        // p.triangle(30, 75, 58, 20, 86, 75);
 
-        p.bezier(10, 100, 23, 50, 20, 90, 100, 100)
-        p.bezier(50, 100, 50, 72.38576251, 72.38576251, 50, 100, 50)
-        p.bezier(100, 100, 100, 100, 200, 100, 200, 100)
-        p.bezier(200, 100, 200, 100, 200, 200, 200, 200)
-        p.bezier(50, 100, 250, 150, 50, 50, 100, 200)
-        p.bezier(300, 700, 550, 300, 300, 400, 700, 600)
-        p.bezier(100, 500, 150, 100, 500, 150, 350, 350)
-        p.bezier(10, 100, 23, 50, 20, 90, 100, 100)
-        p.bezier(200, 600, 200, 200, 600, 450, 450, 250)
-        p.bezier(150, 550, 300, 400, 500, 400, 550, 550)
-        p.bezier(200, 600, 200, 200, 600, 450, 450, 250)
-        p.bezier(300, 700, 550, 330, 300, 400, 700, 600)
-        p.bezier(233.89831, 285.0169000000001, 233.89831, 293.0169000000001, 230.5649766666668, 301.0169000000001, 223.89831, 309.0169000000001)
-        p.bezier(204.89831, 328.0169, 198.89831, 334.0169, 191.2316433333334, 337.0169, 181.89831, 337.0169)
-        p.bezier(199, 135, 199, 134, 210, 134, 211, 134)
-        p.bezier(85, 370, 10, 360, 90, 440, 15, 430)
-        p.bezier(85, 1370, 10, 1360, 90, 1440, 15, 1430)
+        // p.bezier(10, 100, 23, 50, 20, 90, 100, 100)
+        // p.bezier(50, 100, 50, 72.38576251, 72.38576251, 50, 100, 50)
+        // p.bezier(100, 100, 100, 100, 200, 100, 200, 100)
+        // p.bezier(200, 100, 200, 100, 200, 200, 200, 200)
+        // p.bezier(50, 100, 250, 150, 50, 50, 100, 200)
+        // p.bezier(300, 700, 550, 300, 300, 400, 700, 600)
+        // p.bezier(100, 500, 150, 100, 500, 150, 350, 350)
+        // p.bezier(10, 100, 23, 50, 20, 90, 100, 100)
+        // p.bezier(200, 600, 200, 200, 600, 450, 450, 250)
+        // p.bezier(150, 550, 300, 400, 500, 400, 550, 550)
+        // p.bezier(200, 600, 200, 200, 600, 450, 450, 250)
+        // p.bezier(300, 700, 550, 330, 300, 400, 700, 600)
+        // p.bezier(233.89831, 285.0169000000001, 233.89831, 293.0169000000001, 230.5649766666668, 301.0169000000001, 223.89831, 309.0169000000001)
+        // p.bezier(204.89831, 328.0169, 198.89831, 334.0169, 191.2316433333334, 337.0169, 181.89831, 337.0169)
+        // p.bezier(199, 135, 199, 134, 210, 134, 211, 134)
+        // p.bezier(85, 370, 10, 360, 90, 440, 15, 430)
+        // p.bezier(85, 1370, 10, 1360, 90, 1440, 15, 1430)
       }
       function drawPushPopStates(x = 0, y = 0) {
         p.push()
         p.translate(10, 10)
         p.scale(1.1)
         p.rotate(p.QUARTER_PI / 2)
-        p.shearY(p.QUARTER_PI / 2);
-        p.shearX(p.QUARTER_PI / 2);
+        // p.shearY(p.QUARTER_PI / 2);
+        // p.shearX(p.QUARTER_PI / 2);
         drawCollection(x, y)
         p.pop()
-        drawCollection(x, y)
+        // drawCollection(x, y)
       }
 
       let counter = 0
 
       p.draw = () => {
         p.noLoop()
+
         drawGrid()
-        // p.rotate(p.QUARTER_PI / 2)
-        // p.rect(100, 100, 200, 200)
-        // p.ellipse(100, 100, 100, 50)
         // p.push()
         // p.stroke(255, 0, 0)
         // drawAll(true)
         // p.pop()
-
-        // p.push()
-        // p.translate(50, 100)
-        // drawAll(true)
-        // p.pop()
     
         // drawLocalRotations()
-        // drawTransformationTests()
+        drawTransformationTests()
         drawPushPopStates()
+
         p.gcode.copy()
       }
     }
@@ -455,7 +456,7 @@
   </script>
   <script>
     (function () {
-      let x = extend({}, sketch, window.p5)
+      window.x = extend({}, sketch, window.p5)
     })()
   </script>
 </body>
