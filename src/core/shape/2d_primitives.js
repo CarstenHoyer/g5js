@@ -1,5 +1,3 @@
-/* global CORNER, CORNERS, CENTER, RADIUS */
-const util = require("util");
 const canvas = require("../helpers");
 
 module.exports = function(g5) {
@@ -36,6 +34,7 @@ module.exports = function(g5) {
     h = Math.abs(h);
 
     var vals = canvas.modeAdjust(x, y, w, h, this.gcode.state.ellipseMode);
+
     var angles = this._normalizeArcAngles(start, stop, vals.w, vals.h, true);
 
     if (angles.correspondToSamePoint) {
@@ -53,14 +52,14 @@ module.exports = function(g5) {
         vals.h,
         angles.start, // [0, TWO_PI)
         angles.stop, // [start, start + TWO_PI)
-        mode,
-        f
+        mode
       );
     }
+
     return this.callSuper("arc", arguments);
   };
 
-  g5.prototype.ellipse = function(x, y, w, h) {
+  g5.prototype._ellipse = function(x, y, w, h) {
     this.callSuper("_validateParameters", "ellipse", arguments);
     // if the current stroke and fill settings wouldn't result in something
     // visible, exit immediately
@@ -81,8 +80,12 @@ module.exports = function(g5) {
     }
 
     const vals = canvas.modeAdjust(x, y, w, h, this.gcode.state.ellipseMode);
-    console.log(vals);
     this.renderEllipse([vals.x, vals.y, vals.w, vals.h]);
+    return this.callSuper("ellipse", arguments);
+  };
+
+  g5.prototype.ellipse = function(x, y, w, h) {
+    this._ellipse(x, y, w, h);
     return this.callSuper("ellipse", arguments);
   };
 
@@ -90,7 +93,8 @@ module.exports = function(g5) {
     const args = Array.prototype.slice.call(arguments, 0, 2);
     args.push(arguments[2]);
     args.push(arguments[2]);
-    return this.ellipse(...args);
+    this._ellipse(...args);
+    return this.callSuper("circle", arguments);
   };
 
   g5.prototype.line = function(...args) {
@@ -117,7 +121,7 @@ module.exports = function(g5) {
     return this.callSuper("quad", arguments);
   };
 
-  g5.prototype.rect = function() {
+  g5.prototype._rect = function() {
     this.callSuper("_validateParameters", "rect", arguments);
     if (this.gcode.state.doStroke || this.gcode.state.doFill) {
       const vals = canvas.modeAdjust(
@@ -136,12 +140,15 @@ module.exports = function(g5) {
 
       this.renderRect(args);
     }
+  };
 
+  g5.prototype.rect = function(x, y, w, h, tl, tr, br, bl) {
+    this._rect(x, y, w, h, tl, tr, br, bl);
     return this.callSuper("rect", arguments);
   };
 
   g5.prototype.square = function(x, y, s, tl, tr, br, bl) {
-    return this.rect(x, y, s, s, tl, tr, br, bl);
+    return this.callSuper("square", arguments);
   };
 
   g5.prototype.triangle = function(...args) {

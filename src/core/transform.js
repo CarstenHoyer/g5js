@@ -95,7 +95,6 @@ module.exports = function(g5, p5) {
     z = z || 0;
 
     mat3.translate(transformMatrix, transformMatrix, vec3.fromValues(x, y, z));
-    console.log({ transformMatrix });
 
     return this.callSuper("translate", arguments);
   };
