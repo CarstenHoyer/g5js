@@ -1,19 +1,25 @@
-const mat4 = require('gl-matrix/mat4')
+const mat3 = require('gl-matrix/mat3')
 
 module.exports = function (g5, p5) {
   g5.prototype.push = function () {
-    this.states.push(this.state)
-    this.state = Object.assign({}, this.state)
-    this.state.transformMatrix = mat4.fromValues(...this.state.transformMatrix.map(v => v))
+    this.gcode.states.push(this.gcode.state)
+    this.gcode.state = Object.assign({}, this.gcode.state)
+    this.gcode.state.transformMatrix = mat3.fromValues(...this.gcode.state.transformMatrix.map(v => v))
     return this.callSuper('push', arguments)
   }
 
   g5.prototype.pop = function () {
-    const state = this.states.pop()
+    const state = this.gcode.states.pop()
     if (state) {
-      this.state = Object.assign({}, state)
-      this.state.transformMatrix = mat4.fromValues(...this.state.transformMatrix.map(v => v))
+      this.gcode.state = Object.assign({}, state)
+      this.gcode.state.transformMatrix = mat3.fromValues(...this.gcode.state.transformMatrix.map(v => v))
     }
     return this.callSuper('pop', arguments)
+  }
+
+  g5.prototype.redraw = function () {
+    this.gcode.resetMatrix()
+    this.gcode.commands = []
+    return this.callSuper('redraw', arguments)
   }
 }

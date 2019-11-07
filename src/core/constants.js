@@ -2,31 +2,36 @@
  * @property {String} CORNER
  * @final
  */
-global.CORNER = 'corner'
+export const CORNER = "corner";
 
 /**
  * @property {String} CORNERS
  * @final
  */
-global.CORNERS = 'corners'
+export const CORNERS = "corners";
 
 /**
  * @property {String} RADIUS
  * @final
  */
-global.RADIUS = 'radius'
+export const RADIUS = "radius";
 
 /**
  * @property {String} CENTER
  * @final
  */
-global.CENTER = 'center'
+export const CENTER = "center";
 
-global.DEGREES = 'degrees'
+export const DEGREES = "degrees";
 
-global._PI = Math.PI
-global.PI = global._PI
-global.HALF_PI = global._PI / 2
-global.QUARTER_PI = global._PI / 4
+export const _PI = Math.PI;
+export const PI = _PI;
+export const TWO_PI = PI * 2;
+export const HALF_PI = _PI / 2;
+export const QUARTER_PI = _PI / 4;
 
-global.DEG_TO_RAD = global._PI / 180.0
+export const DEG_TO_RAD = _PI / 180.0;
+
+export const OPEN = "open";
+export const CHORD = "chord";
+export const PIE = "pie";

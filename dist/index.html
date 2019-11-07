@@ -1,35 +1,464 @@
 <html>
-  <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
-    <script src="bundle.js"></script>
-  </head>
-  <body>
-    <script>
-      const sketch = function (p) {
-      
-        let x = 100;
-        let y = 100;
-      
-        p.setup = function () {
-          p.createCanvas(200, 200);
-          p.noLoop()
-        };
-      
-        p.draw = function () {
-          p.background(255);
-          p.fill(255);
-          // p.circle(100, 100, 100);
-          p.bezier(10, 100, 23, 50, 20, 90, 100, 100)
-          console.log(p.printGcode().join('\n'))
-        };
-      };
-      </script>
-      <script>
-        (function() {
-          let x = extend({}, sketch, window.p5)
-        })()
-      </script>
-  </body>
+
+<head>
+    <!-- <script src="../node_modules/p5/lib/p5.js" type="text/javascript"></script>
+    <script src="../node_modules/p5/lib/addons/p5.dom.js" type="text/javascript"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script> -->
+  <script src="bundle.js"></script>
+</head>
+
+<body>
+  <script>
+    // This example is adapted from
+    // https://generativeartistry.com/tutorials/circle-packing/
+
+    const sketch = (p) => {
+      p.setup = () => {
+        p.createCanvas(900, 2000);
+        p.background(255);
+        p.noFill()
+        //p.noLoop()
+      }
+
+      const drawGrid = () => {
+        p.push()
+        p.stroke(200)
+        for (let x = 0; x < p.width; x += 10) {
+          if (x % 100 === 0) {
+            p.push()
+            p.stroke(120)
+            p.line(x, 0, x, p.height)
+            p.pop()
+          } else if (x % 50 === 0) {
+            p.push()
+            p.stroke(180)
+            p.line(x, 0, x, p.height)
+            p.pop()
+          } else {
+            //p.line(x, 0, x, p.height)
+          }
+
+          for (let y = 0; y < p.height; y += 10) {
+            if (y % 100 === 0) {
+              p.push()
+              p.stroke(120)
+              p.line(0, y, p.width, y)
+              p.pop()
+            } else if (y % 50 === 0) {
+              p.push()
+              p.stroke(180)
+              p.line(0, y, p.width, y)
+              p.pop()
+            } else {
+              //p.line(0, y, p.width, y)
+            }
+          }
+        }
+        p.pop()
+      }
+
+      function drawArcs(x = 0, y = 0) {
+        // Regular p.arcs
+        p.arc(50 + x, 50 + y, 50, 50, 0, p.HALF_PI)
+        p.arc(100 + x, 50 + y, 50, 50, 0, p.HALF_PI, p.OPEN)
+        p.arc(150 + x, 50 + y, 50, 50, 0, p.HALF_PI, p.CHORD)
+        p.arc(200 + x, 50 + y, 50, 50, 0, p.HALF_PI, p.PIE)
+
+        p.push()
+        p.ellipseMode(p.CORNERS)
+        p.arc(500 + x, 0 + y, 600 + x, 100 + y, 0, p.HALF_PI)
+        p.arc(550 + x, 0 + y, 650 + x, 100 + y, 0, p.HALF_PI, p.OPEN)
+        p.arc(600 + x, 0 + y, 700 + x, 100 + y, 0, p.HALF_PI, p.CHORD)
+        p.arc(670 + x, 0 + y, 770 + x, 100 + y, 0, p.HALF_PI, p.PIE)
+        p.pop()
+
+        // Uneven p.archs
+        p.arc(300 + x, 50 + y, 80, 50, 0, p.HALF_PI)
+        p.arc(350 + x, 50 + y, 80, 50, 0, p.HALF_PI, p.OPEN)
+        p.arc(400 + x, 50 + y, 80, 50, 0, p.HALF_PI, p.CHORD)
+        p.arc(450 + x, 50 + y, 80, 50, 0, p.HALF_PI, p.PIE)
+
+        // ------------------------------------
+        p.push()
+        p.ellipseMode(p.CENTER)
+        p.arc(50 + x, 100 + y, 80, 50, 0, p.HALF_PI)
+        p.arc(100 + x, 100 + y, 80, 50, 0, p.HALF_PI, p.OPEN)
+        p.arc(150 + x, 100 + y, 80, 50, 0, p.HALF_PI, p.CHORD)
+        p.arc(200 + x, 100 + y, 80, 50, 0, p.HALF_PI, p.PIE)
+        p.pop()
+
+
+        p.push()
+        p.ellipseMode(p.CORNER)
+        p.arc(260 + x, 75 + y, 80, 50, 0, p.HALF_PI)
+        p.arc(310 + x, 75 + y, 80, 50, 0, p.HALF_PI, p.OPEN)
+        p.arc(360 + x, 75 + y, 80, 50, 0, p.HALF_PI, p.CHORD)
+        p.arc(410 + x, 75 + y, 80, 50, 0, p.HALF_PI, p.PIE)
+        p.pop()
+
+        // ------------------------------------
+        p.push()
+        p.ellipseMode(p.RADIUS)
+        p.arc(50 + x, 150 + y, 80, 50, 0, p.HALF_PI)
+        p.arc(150 + x, 150 + y, 80, 50, 0, p.HALF_PI, p.OPEN)
+        p.arc(250 + x, 150 + y, 80, 50, 0, p.HALF_PI, p.CHORD)
+        p.arc(350 + x, 150 + y, 80, 50, 0, p.HALF_PI, p.PIE)
+        p.pop()
+      }
+
+      function drawEllipses(x = 0, y = 0) {
+        p.ellipse(150 + x, 500 + y, 50, 50)
+        p.push()
+        p.ellipseMode(p.RADIUS)
+        p.ellipse(150 + x, 500 + y, 50, 50)
+        p.pop()
+
+        p.push()
+        p.ellipseMode(p.CORNER)
+        p.ellipse(275 + x, 475 + y, 50, 50)
+        p.pop()
+
+        p.push()
+        p.ellipseMode(p.CORNERS)
+        p.ellipse(375 + x, 475 + y, 425 + x, 525 + y)
+        p.pop()
+      }
+
+      function drawCircles(x = 0, y = 0) {
+        p.circle(550 + x, 500 + y, 50, 50)
+        p.push()
+        p.ellipseMode(p.RADIUS)
+        p.ellipse(550 + x, 500 + y, 50, 50)
+        p.pop()
+
+        p.push()
+        p.ellipseMode(p.CORNER)
+        p.ellipse(675 + x, 475 + y, 50, 50)
+        p.pop()
+
+        p.push()
+        p.ellipseMode(p.CORNERS)
+        p.ellipse(775 + x, 475 + y, 825 + x, 525 + y)
+        p.pop()
+      }
+
+      function drawLines(x = 0, y = 0) {
+        p.line(50, 900, 100, 850)
+      }
+
+      function drawPoints(x = 0, y = 0) {
+        p.push()
+        p.strokeWeight(5)
+        p.point(150, 900)
+        p.pop()
+      }
+
+      function drawQuads(x = 0, y = 0) {
+        p.quad(
+          238, 831,
+          286, 820,
+          269, 863,
+          230, 876
+        )
+      }
+
+      function drawRects(x = 0, y = 0) {
+        p.rect(400, 850, 50, 50)
+        p.rect(550, 850, 50, 50, 20)
+        p.rect(700, 850, 50, 50, 20, 15, 10, 5)
+        p.rect(800, 850, 50, 50, 20, 15, 0, 15)
+
+        p.push()
+        p.rectMode(p.CORNERS)
+        p.rect(400, 950, 450, 1000)
+        p.pop()
+
+        p.push()
+        p.rectMode(p.RADIUS)
+        p.rect(575, 975, 25, 25)
+        p.pop()
+
+        p.push()
+        p.rectMode(p.CENTER)
+        p.rect(725, 975, 50, 50)
+        p.pop()
+      }
+
+      function drawSquares(x = 0, y = 0) {
+        p.square(100, 1050, 50)
+        p.square(250, 1050, 50, 20)
+        p.square(400, 1050, 50, 20, 15, 10, 5)
+        p.square(550, 1050, 50, 20, 15, 0, 5)
+
+        p.push()
+        p.rectMode(p.CORNERS)
+        p.rect(100, 1200, 150, 1150)
+        p.pop()
+
+        p.push()
+        p.rectMode(p.RADIUS)
+        p.rect(275, 1175, 25, 25)
+        p.pop()
+
+        p.push()
+        p.rectMode(p.CENTER)
+        p.rect(425, 1175, 50, 50)
+        p.pop()
+      }
+
+      function drawTriangles(x = 0, y = 0) {
+        p.triangle(150, 1300, 200, 1250, 250, 1300)
+      }
+
+      function drawBeziers(x = 0, y = 0) {
+        p.push()
+        const p1 = {
+          x: 0,
+          y: 1350
+        }
+        
+        p.bezier(85 + p1.x, 20 + p1.y, 10 + p1.x, 10 + p1.y, 90 + p1.x, 90 + p1.y, 15 + p1.x, 80 + p1.y)
+        p.bezier(200 + p1.x, 600 + p1.y, 200 + p1.x, 200 + p1.y, 600 + p1.x, 450 + p1.y, 450 + p1.x, 250 + p1.y)
+        p.bezier(100 + p1.x, 100 + p1.y, 100 + p1.x, 100 + p1.y, 200 + p1.x, 100 + p1.y, 200 + p1.x, 100 + p1.y)
+        p.bezier(200 + p1.x, 100 + p1.y, 200 + p1.x, 100 + p1.y, 200 + p1.x, 200 + p1.y, 200 + p1.x, 200 + p1.y)
+        p.pop()
+      }
+
+      function drawAll(rotation = false) {
+        // Regular p.arcs
+        drawArcs()
+        p.push()
+        p.rotate(p.QUARTER_PI / 2)
+        // Globally roated p.arcs
+        rotation && drawArcs(0, 0)
+        rotation && drawArcs(50, 150)
+        p.pop()
+
+        drawEllipses()
+        p.push()
+        p.rotate(0.2)
+        rotation && drawEllipses()
+        rotation && drawEllipses(54, 150)
+        p.pop()
+
+        drawCircles()
+        p.push()
+        p.rotate(0.2)
+        rotation && drawCircles()
+        rotation && drawCircles(54, 150)
+        p.pop()
+
+        drawLines()
+        p.push()
+        p.rotate(0.05)
+        rotation && drawLines(54, 150)
+        p.pop()
+
+        drawPoints()
+        p.push()
+        p.rotate(0.05)
+        rotation && drawPoints(54, 150)
+        p.pop()
+
+        drawQuads()
+        p.push()
+        p.rotate(0.07)
+        rotation && drawQuads(54, 150)
+        p.pop()
+
+        drawRects()
+        p.push()
+        p.rotate(0.07)
+        rotation && drawRects(54, 150)
+        p.pop()
+
+        drawSquares()
+        p.push()
+        p.rotate(0.07)
+        rotation && drawSquares(54, 150)
+        p.pop()
+
+        drawTriangles()
+        p.push()
+        p.rotate(0.07)
+        rotation && drawTriangles(54, 150)
+        p.pop()
+
+        drawBeziers()
+        p.push()
+        p.rotate(-0.07)
+        rotation && drawBeziers(54, 150)
+        p.pop()
+      }
+
+      function drawCentered(rotation = false) {
+        p.push()
+        p.translate(p.width / 2 - 200, p.height / 2 + 400)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.rect(0, 0, 100, 100)
+        p.pop()
+
+        p.push()
+        p.translate(p.width / 2 - 50, p.height / 2 + 400)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.ellipse(0, 0, 50, 150)
+        p.pop()
+
+        p.push()
+        p.translate(p.width / 2 + 50, p.height / 2 + 400)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.line(0, -50, 0, 50)
+        p.pop()
+
+        p.push()
+        p.translate(p.width / 2 + 200, p.height / 2 + 400)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.rect(0, 0, 100, 100, 20, 15, 10, 5)
+        p.pop()
+
+        p.push()
+        p.translate(p.width / 2 - 350, p.height / 2 + 400)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.push()
+        p.strokeWeight(10)
+        p.point(0, 0)
+        p.pop()
+        p.pop()
+
+        p.push()
+        p.translate(p.width / 2 + 350, p.height / 2 + 400)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.quad(-50, -50, 50, -50, 50, 50, -50, 50)
+        p.pop()
+
+        p.push()
+        p.translate(p.width / 2 - 350, p.height / 2 + 550)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.square(0, 0, 100, 20)
+        p.pop()
+
+        p.push()
+        p.translate(p.width / 2 - 200, p.height / 2 + 550)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.square(0, 0, 100, 20, 15, 10, 5)
+        p.pop()
+
+        p.push()
+        p.translate(p.width / 2 - 50, p.height / 2 + 550)
+        rotation && p.rotate(p.HALF_PI / 2);
+        p.triangle(-50, 50, 0, -50, 50, 50)
+        p.pop()
+      }
+
+      function drawLocalRotations() {
+        p.push()
+        p.rectMode(p.CENTER)
+        drawCentered()
+        drawCentered(true)
+        p.pop()
+      }
+
+      function drawTransformationTests (x = 0, y = 0) {
+        p.translate(50, 100)
+        p.scale(1.2)
+
+        // p.rotate(p.QUARTER_PI / 2)
+        // p.shearY(p.QUARTER_PI / 2);
+        // p.shearX(p.QUARTER_PI / 2);
+        // p.shearX(p.QUARTER_PI / 2);
+        // p.shearY(p.QUARTER_PI / 2);
+
+        p.translate(100, 5)
+        // p.rotate(p.QUARTER_PI / 2)
+
+        // p.rotate(p.QUARTER_PI / 8)
+        // p.rotate(p.QUARTER_PI / 8)
+        // p.rotate(p.QUARTER_PI / 8)
+        
+        // drawCollection(x, y)
+      }
+
+      function drawCollection(x, y) {
+        // p.arc(50 + x, 100 + y, 50 + x, 50 + y, 0, p.HALF_PI)
+        p.ellipse(50 + x, 100 + y, 50, 50)
+        // p.ellipse(100 + x, 100 + y, 50, 75)
+        // p.circle(150 + x, 200 + y, 50)
+        // p.line(0 + x, 0 + y, 50 + x, 50 + y)
+        
+        // p.push()
+        // p.strokeWeight(10)
+        // p.point(5, 300)
+        // p.pop()
+        
+        // p.quad(38, 31, 86, 20, 69, 63, 30, 76)
+
+        // p.rect(0 + x, -100 + y, 50 + x, 50 + y)
+        // p.rect(100 + x, -50 + y, 50 + x, 50 + y, 20)
+        // p.rect(200 + x, -100 + y, 50 + x, 50 + y, 20, 15, 10, 5)
+
+        // p.square(100, 20, 55);
+        // p.square(150, 0, 50, 10);
+        // p.square(200, 20, 55, 20, 15, 10, 5);
+
+        // p.triangle(30, 75, 58, 20, 86, 75);
+
+        // p.bezier(10, 100, 23, 50, 20, 90, 100, 100)
+        // p.bezier(50, 100, 50, 72.38576251, 72.38576251, 50, 100, 50)
+        // p.bezier(100, 100, 100, 100, 200, 100, 200, 100)
+        // p.bezier(200, 100, 200, 100, 200, 200, 200, 200)
+        // p.bezier(50, 100, 250, 150, 50, 50, 100, 200)
+        // p.bezier(300, 700, 550, 300, 300, 400, 700, 600)
+        // p.bezier(100, 500, 150, 100, 500, 150, 350, 350)
+        // p.bezier(10, 100, 23, 50, 20, 90, 100, 100)
+        // p.bezier(200, 600, 200, 200, 600, 450, 450, 250)
+        // p.bezier(150, 550, 300, 400, 500, 400, 550, 550)
+        // p.bezier(200, 600, 200, 200, 600, 450, 450, 250)
+        // p.bezier(300, 700, 550, 330, 300, 400, 700, 600)
+        // p.bezier(233.89831, 285.0169000000001, 233.89831, 293.0169000000001, 230.5649766666668, 301.0169000000001, 223.89831, 309.0169000000001)
+        // p.bezier(204.89831, 328.0169, 198.89831, 334.0169, 191.2316433333334, 337.0169, 181.89831, 337.0169)
+        // p.bezier(199, 135, 199, 134, 210, 134, 211, 134)
+        // p.bezier(85, 370, 10, 360, 90, 440, 15, 430)
+        // p.bezier(85, 1370, 10, 1360, 90, 1440, 15, 1430)
+      }
+      function drawPushPopStates(x = 0, y = 0) {
+        p.push()
+        p.translate(10, 10)
+        p.scale(1.1)
+        p.rotate(p.QUARTER_PI / 2)
+        // p.shearY(p.QUARTER_PI / 2);
+        // p.shearX(p.QUARTER_PI / 2);
+        drawCollection(x, y)
+        p.pop()
+        // drawCollection(x, y)
+      }
+
+      let counter = 0
+
+      p.draw = () => {
+        p.noLoop()
+
+        drawGrid()
+        // p.push()
+        // p.stroke(255, 0, 0)
+        // drawAll(true)
+        // p.pop()
+    
+        // drawLocalRotations()
+        drawTransformationTests()
+        drawPushPopStates()
+
+        p.gcode.copy()
+      }
+    }
+
+  </script>
+  <script>
+    (function () {
+      window.x = extend({}, sketch, window.p5)
+    })()
+  </script>
+</body>
+
 </html>
