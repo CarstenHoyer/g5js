@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "assemblyscript": "github:AssemblyScript/assemblyscript",
-    "beziertobiarc": "https://github.com/CarstenHoyer/bezierToBiarc#0.0.4",
+    "beziertobiarc": "https://github.com/CarstenHoyer/bezierToBiarc#0.0.5",
     "canvas": "^2.6.0",
     "canvas-prebuilt": "^2.0.0-alpha.14",
     "gl-matrix": "^3.1.0",
