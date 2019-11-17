@@ -1583,9 +1583,9 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-"beziertobiarc@https://github.com/CarstenHoyer/bezierToBiarc#0.0.6":
+"beziertobiarc@https://github.com/CarstenHoyer/bezierToBiarc#0.0.7":
   version "1.0.0"
-  resolved "https://github.com/CarstenHoyer/bezierToBiarc#50d1dfef0f15ddcd7d5e7c3a03c73fb55c51fe83"
+  resolved "https://github.com/CarstenHoyer/bezierToBiarc#6590fe98e2aed71b2585dcc1dd16cd4adaa964a3"
   dependencies:
     complex.js "^2.0.11"
 
