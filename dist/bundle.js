@@ -90422,7 +90422,7 @@ function postInstantiate(baseModule, instance) {
       ? U32[arr + ARRAY_LENGTH_OFFSET >>> 2]
       : U32[buf + SIZE_OFFSET >>> 2] >>> align;
     return getView(align, info & VAL_SIGNED, info & VAL_FLOAT)
-          .slice(buf >>>= align, buf + length);
+          .subarray(buf >>>= align, buf + length);
   }
 
   baseModule.__getArrayView = __getArrayView;
@@ -90451,8 +90451,7 @@ function postInstantiate(baseModule, instance) {
     const buffer = memory.buffer;
     const U32 = new Uint32Array(buffer);
     const bufPtr = U32[ptr + ARRAYBUFFERVIEW_DATASTART_OFFSET >>> 2];
-    const length = U32[bufPtr + SIZE_OFFSET >>> 2];
-    return new Type(buffer).slice(bufPtr >>> alignLog2, bufPtr + length >>> alignLog2);
+    return new Type(buffer, bufPtr, U32[bufPtr + SIZE_OFFSET >>> 2] >>> alignLog2);
   }
 
   /** Gets a view on the values of a known-to-be Int8Array in the module's memory. */
@@ -90511,28 +90510,54 @@ function wrapFunction(fn, setargc) {
   return wrap;
 }
 
-/** Instantiates an AssemblyScript module using the specified imports. */
-function instantiate(module, imports) {
+function isResponse(o) {
+  return typeof Response !== "undefined" && o instanceof Response;
+}
+
+/** Asynchronously instantiates an AssemblyScript module from anything that can be instantiated. */
+async function instantiate(source, imports) {
+  if (isResponse(source = await source)) return instantiateStreaming(source, imports);
   return postInstantiate(
     preInstantiate(imports || (imports = {})),
-    new WebAssembly.Instance(module, imports)
+    await WebAssembly.instantiate(
+      source instanceof WebAssembly.Module
+        ? source
+        : await WebAssembly.compile(source),
+      imports
+    )
   );
 }
 
 exports.instantiate = instantiate;
 
-/** Instantiates an AssemblyScript module from a buffer using the specified imports. */
-function instantiateBuffer(buffer, imports) {
-  return instantiate(new WebAssembly.Module(buffer), imports);
-}
-
-exports.instantiateBuffer = instantiateBuffer;
-
-/** Instantiates an AssemblyScript module from a response using the specified imports. */
-async function instantiateStreaming(response, imports) {
+/** Synchronously instantiates an AssemblyScript module from a WebAssembly.Module or binary buffer. */
+function instantiateSync(source, imports) {
   return postInstantiate(
     preInstantiate(imports || (imports = {})),
-    (await WebAssembly.instantiateStreaming(response, imports)).instance
+    new WebAssembly.Instance(
+      source instanceof WebAssembly.Module
+        ? source
+        : new WebAssembly.Module(source),
+      imports
+    )
+  )
+}
+
+exports.instantiateSync = instantiateSync;
+
+/** Asynchronously instantiates an AssemblyScript module from a response, i.e. as obtained by `fetch`. */
+async function instantiateStreaming(source, imports) {
+  if (!WebAssembly.instantiateStreaming) {
+    return instantiate(
+      isResponse(source = await source)
+        ? source.arrayBuffer()
+        : source,
+      imports
+    );
+  }
+  return postInstantiate(
+    preInstantiate(imports || (imports = {})),
+    (await WebAssembly.instantiateStreaming(source, imports)).instance
   );
 }
 
