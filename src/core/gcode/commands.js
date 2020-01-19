@@ -8,12 +8,12 @@ const _getPoint = function(point) {
   return [x, y];
 };
 
-const down = function() {
-  return "G0 Z0";
+const down = function(to) {
+  return `G0 Z${to}`;
 };
 
-const up = function() {
-  return "G0 Z1";
+const up = function(to) {
+  return `G0 Z${to}`;
 };
 
 const dwell = function(sec) {

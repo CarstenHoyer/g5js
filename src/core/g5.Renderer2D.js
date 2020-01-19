@@ -22,7 +22,7 @@ module.exports = function(g5, p5) {
 
   g5.prototype._up = function(pos) {
     if (this.gcode.drawing) {
-      this.concat([up()]);
+      this.concat([up(this.gcode.config.up)]);
       this.gcode.pos = { x: pos[0], y: pos[1] };
       this.gcode.drawing = false;
     }
@@ -35,7 +35,7 @@ module.exports = function(g5, p5) {
       this.concat([move(point)]);
     }
     if (!this.gcode.drawing) {
-      this.concat([down()]);
+      this.concat([down(this.gcode.config.down)]);
       this.gcode.drawing = true;
     }
   };
@@ -294,7 +294,12 @@ module.exports = function(g5, p5) {
 
     const points = transformPoints([vec2.fromValues(x, y)], matrix);
 
-    return this.concat([move(points[0]), down(), dwell(1), up()]);
+    return this.concat([
+      move(points[0]),
+      down(this.gcode.config.down),
+      dwell(this.gcode.config.dwell),
+      up(this.gcode.config.up)
+    ]);
   };
 
   g5.prototype.renderTriangle = function(args) {

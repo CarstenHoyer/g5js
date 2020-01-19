@@ -31,6 +31,8 @@ global.extend = function(cfg, sketch, p5) {
         },
         commands: [],
         config: {
+          down: cfg.down || 0,
+          up: cfg.up || 10,
           feedrate: cfg.feedrate || 300,
           dwell: cfg.dwell || 1
         },
