@@ -34,7 +34,7 @@
     "beziertobiarc": "https://github.com/CarstenHoyer/bezierToBiarc#0.0.7",
     "canvas": "^2.6.0",
     "gl-matrix": "^3.1.0",
-    "jsdom": "^15.1.1",
+    "jsdom": "^16.5.0",
     "mathjs": "^6.1.0",
     "p5": "^0.9.0",
     "standard": "^14.0.0"
